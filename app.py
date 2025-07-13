@@ -8,7 +8,7 @@ API_KEY = "0af6240444ce4b338ee84240251007"
 
 # Configure Streamlit page
 st.set_page_config(
-    page_title="🌾 Smart Krishi Weather",
+    page_title="Weather Forecast",
     page_icon="🌦️",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -202,7 +202,7 @@ st.markdown("""
     
     .location-name {
         font-size: 1.5rem;
-        color: white;
+        color: solid black;
         font-weight: 600;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
