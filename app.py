@@ -238,6 +238,7 @@ st.markdown("""
     }
     
     .stButton > button:hover {
+        margin-top : 50px;
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
