@@ -214,14 +214,9 @@ st.markdown("""
         border: none;
         border-radius: 50px;
         padding: 15px 20px;
-        font-size: 2.0rem;
+        font-size: 1.8rem;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
-    }
-    
-    .stTextInput > div > div > input:focus {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        transform: translateY(-2px);
     }
     
     /* Button Styling */
@@ -232,7 +227,7 @@ st.markdown("""
         border-radius: 50px;
         margin-top: -15px;
         padding: 15px 30px;
-        font-size: 1.1rem;
+        font-size: 1.8rem;
         font-weight: 600;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
