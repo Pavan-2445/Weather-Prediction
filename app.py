@@ -209,12 +209,12 @@ st.markdown("""
     
     /* Input Styling */
     .stTextInput > div > div > input {
-        height: 10px;
+        height: 20px;
         background: solid black;
         border: none;
         border-radius: 50px;
         padding: 15px 20px;
-        font-size: 1.1rem;
+        font-size: 2.0rem;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
     }
