@@ -22,7 +22,7 @@ def get_weather(location_name):
     if not lat:
         return None, "⚠️ Location not found. Try another city, village, or PIN."
 
-    url = f"httphttp://api.weatherapi.com/v1/current.json?key={API_KEY}&q={lat},{lon}&aqi=yes"
+    url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={lat},{lon}&aqi=yes"
     try:
         response = requests.get(url)
         if response.status_code != 200:
