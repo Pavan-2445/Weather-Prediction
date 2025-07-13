@@ -229,7 +229,7 @@ st.markdown("""
         color: white;
         border: none;
         border-radius: 50px;
-        margin-top: -20px;
+        margin-top: -15px;
         padding: 15px 30px;
         font-size: 1.1rem;
         font-weight: 600;
