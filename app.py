@@ -1,29 +1,41 @@
-import streamlit as st
-import streamlit.components.v1 as components
+# utils/weather.py
+
 import requests
+from geopy.geocoders import Nominatim
 
-# 🔐 Weather API
-API_KEY = "0af6240444ce4b338ee84240251007"
+API_KEY = "0af6240444ce4b338ee84240251007"  # ⬅️ Replace with your actual API key
 
-# 🌦️ Get weather by coordinates
-def get_weather(lat, lon):
+def get_coordinates(location_name):
+    geolocator = Nominatim(user_agent="smart-krishi-weather")
+    location = geolocator.geocode(location_name)
+    if location:
+        return location.latitude, location.longitude
+    else:
+        return None, None
+
+def get_weather(location_name):
+    lat, lon = get_coordinates(location_name)
+    if not lat:
+        return "⚠️ Location not found. Please enter a valid city, district, or village."
+
     url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={lat},{lon}"
     response = requests.get(url)
     if response.status_code != 200:
         return "⚠️ Weather API error"
-    
+
     data = response.json()
     current = data['current']
     emoji = weather_emoji(current['condition']['text'])
 
-    return f"""
+    weather_info = f"""
     ## {emoji} {current['condition']['text']}
-    - 🌡️ Temp: **{current['temp_c']}°C**
+    - 🌡️ Temperature: **{current['temp_c']}°C**
     - 💧 Humidity: **{current['humidity']}%**
-    - 💨 Wind: **{current['wind_kph']} km/h**
+    - 💨 Wind Speed: **{current['wind_kph']} km/h**
     """
 
-# 🌈 Emoji Helper
+    return weather_info
+
 def weather_emoji(condition):
     condition = condition.lower()
     if 'sunny' in condition or 'clear' in condition:
@@ -40,38 +52,3 @@ def weather_emoji(condition):
         return "🌫️"
     else:
         return "🌈"
-
-# UI
-st.set_page_config(page_title="📍Weather by My Location", layout="centered")
-st.title("📍 Live Weather at Your Current Location")
-
-# 🌍 Inject JavaScript to get browser's location
-components.html(
-    """
-    <script>
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const newUrl = window.location.origin + window.location.pathname + "?lat=" + lat + "&lon=" + lon;
-            window.location.replace(newUrl);
-        },
-        (error) => {
-            alert('❌ Location access denied or unavailable.');
-        }
-    );
-    </script>
-    """,
-    height=0,
-)
-
-# ✅ Use st.query_params instead of experimental
-query_params = st.query_params
-
-if "lat" in query_params and "lon" in query_params:
-    lat = query_params["lat"]
-    lon = query_params["lon"]
-    weather = get_weather(lat, lon)
-    st.markdown(weather)
-else:
-    st.info("🔍 Waiting for geolocation permission from browser...")
