@@ -209,7 +209,7 @@ st.markdown("""
     
     /* Input Styling */
     .stTextInput > div > div > input {
-        background: rgba(255, 255, 255, 0.9);
+        background: solid black;
         border: none;
         border-radius: 50px;
         padding: 15px 20px;
