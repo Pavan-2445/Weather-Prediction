@@ -53,13 +53,11 @@ components.html(
         (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = `/get_location?lat=${lat}&lon=${lon}`;
-            document.body.appendChild(iframe);
+            const newUrl = window.location.origin + window.location.pathname + "?lat=" + lat + "&lon=" + lon;
+            window.location.replace(newUrl);
         },
         (error) => {
-            alert('Location access denied.');
+            alert('❌ Location access denied or unavailable.');
         }
     );
     </script>
@@ -67,12 +65,12 @@ components.html(
     height=0,
 )
 
-# 💡 Get values from query params
-query_params = st.experimental_get_query_params()
+# ✅ Use st.query_params instead of experimental
+query_params = st.query_params
 
 if "lat" in query_params and "lon" in query_params:
-    lat = query_params["lat"][0]
-    lon = query_params["lon"][0]
+    lat = query_params["lat"]
+    lon = query_params["lon"]
     weather = get_weather(lat, lon)
     st.markdown(weather)
 else:
