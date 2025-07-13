@@ -229,6 +229,7 @@ st.markdown("""
         color: white;
         border: none;
         border-radius: 50px;
+        margin-top: 50px;
         padding: 15px 30px;
         font-size: 1.1rem;
         font-weight: 600;
@@ -238,7 +239,6 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        margin-top : 50px;
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
