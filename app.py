@@ -209,6 +209,7 @@ st.markdown("""
     
     /* Input Styling */
     .stTextInput > div > div > input {
+        height: 10px;
         background: solid black;
         border: none;
         border-radius: 50px;
