@@ -2,10 +2,11 @@ import streamlit as st
 import requests
 from geopy.geocoders import Nominatim
 import time
-
+import os
+from dotenv import load_dotenv
 # 🔐 Your WeatherAPI Key
-API_KEY = "0af6240444ce4b338ee84240251007"
-
+load_dotenv()
+API_KEY = os.getenv("WEATHER_API_KEY")
 # Configure Streamlit page
 st.set_page_config(
     page_title="Weather Forecast",
