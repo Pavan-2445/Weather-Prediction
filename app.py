@@ -625,7 +625,7 @@ def main():
     col1, col2 = st.columns([3, 1])
 
     with col1:
-        location = st.text_input("📍", "523001", label_visibility="collapsed", placeholder=t["input_placeholder"])
+        location = st.text_input("📍", "523157", label_visibility="collapsed", placeholder=t["input_placeholder"])
 
     with col2:
         search_button = st.button(t["button_text"], key="search")
