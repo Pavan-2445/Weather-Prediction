@@ -631,8 +631,7 @@ def main():
         search_button = st.button(t["button_text"], key="search")
 
     # Weather Display
-    if search_button or location:
-        if location:
+    if search_button:
             with st.spinner(t["loading"]):
                 weather, error = get_weather(location)
 
