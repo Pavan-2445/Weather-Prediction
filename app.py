@@ -130,6 +130,10 @@ condition_translations = {
     }
 }
 
+
+
+# [Previous CSS code remains exactly the same...]
+
 # Custom CSS for beautiful styling
 st.markdown("""
 <style>
@@ -555,9 +559,9 @@ def main():
         "active" if st.session_state.lang == "te" else ""
     ), unsafe_allow_html=True)
     
-    # Handle language change
-    if st.experimental_get_query_params().get("lang"):
-        st.session_state.lang = st.experimental_get_query_params()["lang"][0]
+    # Handle language change using st.query_params
+    if st.query_params.get("lang"):
+        st.session_state.lang = st.query_params["lang"][0]
     
     # Get current language translations
     lang = st.session_state.lang
