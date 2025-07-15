@@ -706,7 +706,7 @@ def main():
                 ''', unsafe_allow_html=True)
 
                 st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.info(t["enter_location"])
+            else:
+                st.info(t["enter_location"])
 if __name__ == "__main__":
     main()
