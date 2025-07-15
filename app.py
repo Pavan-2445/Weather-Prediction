@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 from gtts import gTTS
 import base64
 import io
+import pyttsx3
+
+# Initialize pyttsx3 engine as fallback
+engine = pyttsx3.init()
+voices = engine.getProperty('voices')
 
 # 🔐 Your WeatherAPI Key
 load_dotenv()
@@ -20,7 +25,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Language translations
+# Enhanced language translations with detailed weather reports
 translations = {
     "en": {
         "title": "🌦️ Weather Speak 🗣",
@@ -39,6 +44,15 @@ translations = {
             "feels_like": "Feels Like",
             "condition": "Condition",
             "temperature": "Temperature"
+        },
+        "weather_report": {
+            "intro": "Here's the detailed weather report for {}",
+            "temp": "The current temperature is {:.0f} degrees Celsius",
+            "feels_like": "but it feels like {:.0f} degrees",
+            "condition": "with {} conditions",
+            "humidity": "Humidity is at {} percent",
+            "wind": "and wind speeds of {} kilometers per hour",
+            "air_quality": "Air quality index shows {} micrograms per cubic meter of PM2.5"
         }
     },
     "te": {
@@ -58,6 +72,15 @@ translations = {
             "feels_like": "అనుభూతి",
             "condition": "స్థితి",
             "temperature": "ఉష్ణోగ్రత"
+        },
+        "weather_report": {
+            "intro": "{} కోసం వివరణాత్మక వాతావరణ నివేదిక ఇది",
+            "temp": "ప్రస్తుత ఉష్ణోగ్రత {:.0f} డిగ్రీల సెల్సియస్",
+            "feels_like": "కానీ {:.0f} డిగ్రీలుగా అనిపిస్తుంది",
+            "condition": "{} పరిస్థితులతో",
+            "humidity": "తేమ {} శాతం ఉంది",
+            "wind": "మరియు గంటకు {} కిలోమీటర్ల వేగంతో గాలి వీస్తోంది",
+            "air_quality": "గాలి నాణ్యత సూచిక PM2.5 కు {} మైక్రోగ్రాములు ప్రతి క్యూబిక్ మీటరుకు చూపిస్తుంది"
         }
     },
     "hi": {
@@ -77,6 +100,15 @@ translations = {
             "feels_like": "अनुभूति",
             "condition": "स्थिति",
             "temperature": "तापमान"
+        },
+        "weather_report": {
+            "intro": "{} के लिए विस्तृत मौसम रिपोर्ट यहां है",
+            "temp": "वर्तमान तापमान {:.0f} डिग्री सेल्सियस है",
+            "feels_like": "लेकिन यह {:.0f} डिग्री जैसा महसूस होता है",
+            "condition": "{} स्थितियों के साथ",
+            "humidity": "नमी {} प्रतिशत है",
+            "wind": "और हवा की गति {} किलोमीटर प्रति घंटा है",
+            "air_quality": "वायु गुणवत्ता सूचकांक PM2.5 के लिए {} माइक्रोग्राम प्रति घन मीटर दिखाता है"
         }
     }
 }
@@ -84,19 +116,19 @@ translations = {
 # Weather condition translations
 condition_translations = {
     "en": {
-        "Sunny": "Sunny",
-        "Clear": "Clear",
-        "Partly cloudy": "Partly cloudy",
-        "Cloudy": "Cloudy",
-        "Overcast": "Overcast",
-        "Mist": "Mist",
-        "Fog": "Fog",
-        "Light rain": "Light rain",
-        "Moderate rain": "Moderate rain",
-        "Heavy rain": "Heavy rain",
-        "Thunderstorm": "Thunderstorm",
-        "Snow": "Snow",
-        "Haze": "Haze"
+        "Sunny": "sunny",
+        "Clear": "clear",
+        "Partly cloudy": "partly cloudy",
+        "Cloudy": "cloudy",
+        "Overcast": "overcast",
+        "Mist": "misty",
+        "Fog": "foggy",
+        "Light rain": "light rain",
+        "Moderate rain": "moderate rain",
+        "Heavy rain": "heavy rain",
+        "Thunderstorm": "thunderstorms",
+        "Snow": "snow",
+        "Haze": "haze"
     },
     "te": {
         "Sunny": "ఎండ",
@@ -130,11 +162,7 @@ condition_translations = {
     }
 }
 
-
-
 # [Previous CSS code remains exactly the same...]
-
-# Custom CSS for beautiful styling
 st.markdown("""
 <style>
     /* Import Google Fonts */
@@ -447,6 +475,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
 # 📍 Get coordinates from location
 def get_coordinates(location_name):
     try:
@@ -523,19 +552,67 @@ def autoplay_audio(audio_file):
         <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
         </audio>
         """
-    st.markdown(md,unsafe_allow_html=True)
+    st.markdown(md, unsafe_allow_html=True)
 
-# Function to generate speech from text
+# Function to generate speech from text with fallback
 def text_to_speech(text, lang):
     try:
-        tts = gTTS(text=text, lang=lang)
-        audio_file = io.BytesIO()
-        tts.write_to_fp(audio_file)
-        audio_file.seek(0)
-        return audio_file
+        # First try gTTS
+        try:
+            tts = gTTS(text=text, lang=lang)
+            audio_file = io.BytesIO()
+            tts.write_to_fp(audio_file)
+            audio_file.seek(0)
+            return audio_file
+        except Exception as e:
+            print(f"gTTS failed, falling back to pyttsx3: {e}")
+            
+            # Fallback to pyttsx3
+            engine = pyttsx3.init()
+            
+            # Set voice based on language
+            if lang == "hi":
+                for voice in voices:
+                    if "hindi" in voice.name.lower():
+                        engine.setProperty('voice', voice.id)
+                        break
+            elif lang == "te":
+                for voice in voices:
+                    if "telugu" in voice.name.lower():
+                        engine.setProperty('voice', voice.id)
+                        break
+            
+            engine.save_to_file(text, 'temp_audio.mp3')
+            engine.runAndWait()
+            
+            with open('temp_audio.mp3', 'rb') as f:
+                audio_file = io.BytesIO(f.read())
+            
+            return audio_file
+            
     except Exception as e:
         st.error(f"Error in text-to-speech: {e}")
         return None
+
+# Function to generate detailed weather report text
+def generate_weather_report(weather_data, lang):
+    t = translations[lang]
+    cond_t = condition_translations[lang]
+    report = t["weather_report"]
+    
+    translated_condition = cond_t.get(weather_data["condition"], weather_data["condition"])
+    
+    report_text = "\n".join([
+        report["intro"].format(weather_data["location"]),
+        report["temp"].format(weather_data["temp"]),
+        report["feels_like"].format(weather_data["feels_like"]),
+        report["condition"].format(translated_condition),
+        report["humidity"].format(weather_data["humidity"]),
+        report["wind"].format(weather_data["wind"]),
+        report["air_quality"].format(weather_data["aqi"]) if weather_data["aqi"] != "N/A" else ""
+    ])
+    
+    return report_text
 
 # Main App
 def main():
@@ -554,7 +631,6 @@ def main():
         "🌐 Choose Language",
         list(lang_options.keys()),
         index=list(lang_options.values()).index(st.session_state.get("lang", "en"))
-    )
     st.session_state.lang = lang_options[lang_display]
 
     # Step 2: Load translations
@@ -584,29 +660,17 @@ def main():
             if error:
                 st.error(error)
             elif weather:
-                translated_condition = cond_t.get(weather["condition"], weather["condition"])
-
-                # Generate speech text
-                if lang == "en":
-                    report_text = f"""Current weather in {weather["location"]}: 
-Temperature is {weather["temp"]:.0f} degrees Celsius, feels like {weather["feels_like"]:.0f} degrees. 
-{translated_condition}. Humidity is {weather["humidity"]}%.
-Wind speed is {weather["wind"]} kilometers per hour."""
-                elif lang == "te":
-                    report_text = f"""{weather["location"]} లో ప్రస్తుత వాతావరణం: 
-ఉష్ణోగ్రత {weather["temp"]:.0f} డిగ్రీల సెల్సియస్, అనుభూతి {weather["feels_like"]:.0f} డిగ్రీలు. 
-{translated_condition}. తేమ {weather["humidity"]}%.
-గాలి వేగం గంటకు {weather["wind"]} కి.మీ."""
-                elif lang == "hi":
-                    report_text = f"""{weather["location"]} में मौजूदा मौसम: 
-तापमान {weather["temp"]:.0f} डिग्री सेल्सियस है, जो {weather["feels_like"]:.0f} डिग्री जैसा लगता है।
-{translated_condition}. नमी {weather["humidity"]}% है।
-हवा की गति {weather["wind"]} किमी प्रति घंटा है।"""
-
-                # TTS
+                # Generate detailed weather report text
+                report_text = generate_weather_report(weather, lang)
+                
+                # TTS in selected language
                 audio_file = text_to_speech(report_text, lang)
                 if audio_file:
                     autoplay_audio(audio_file)
+                
+                # Display weather information
+                translated_condition = cond_t.get(weather["condition"], weather["condition"])
+                
                 # Weather Card
                 st.markdown('<div class="weather-card">', unsafe_allow_html=True)
 
@@ -666,23 +730,6 @@ Wind speed is {weather["wind"]} kilometers per hour."""
                 st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info(t["enter_location"])
-
-# JavaScript for language toggle
-st.markdown("""
-<script>
-    window.streamlitScriptHostCommunication = {
-        comms: {
-            sendMessage: function(message) {
-                if (message.type === 'setLang') {
-                    const queryParams = new URLSearchParams(window.location.search);
-                    queryParams.set('lang', message.lang);
-                    window.location.search = queryParams.toString();
-                }
-            }
-        }
-    };
-</script>
-""", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
