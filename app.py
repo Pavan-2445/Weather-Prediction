@@ -7,11 +7,8 @@ from dotenv import load_dotenv
 from gtts import gTTS
 import base64
 import io
-import pyttsx3
 
-# Initialize pyttsx3 engine as fallback
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
+
 
 # 🔐 Your WeatherAPI Key
 load_dotenv()
@@ -557,42 +554,16 @@ def autoplay_audio(audio_file):
 # Function to generate speech from text with fallback
 def text_to_speech(text, lang):
     try:
-        # First try gTTS
-        try:
-            tts = gTTS(text=text, lang=lang)
-            audio_file = io.BytesIO()
-            tts.write_to_fp(audio_file)
-            audio_file.seek(0)
-            return audio_file
-        except Exception as e:
-            print(f"gTTS failed, falling back to pyttsx3: {e}")
-            
-            # Fallback to pyttsx3
-            engine = pyttsx3.init()
-            
-            # Set voice based on language
-            if lang == "hi":
-                for voice in voices:
-                    if "hindi" in voice.name.lower():
-                        engine.setProperty('voice', voice.id)
-                        break
-            elif lang == "te":
-                for voice in voices:
-                    if "telugu" in voice.name.lower():
-                        engine.setProperty('voice', voice.id)
-                        break
-            
-            engine.save_to_file(text, 'temp_audio.mp3')
-            engine.runAndWait()
-            
-            with open('temp_audio.mp3', 'rb') as f:
-                audio_file = io.BytesIO(f.read())
-            
-            return audio_file
-            
+        lang_code = {"en": "en", "te": "te", "hi": "hi"}.get(lang, "en")
+        tts = gTTS(text=text, lang=lang_code)
+        audio_file = io.BytesIO()
+        tts.write_to_fp(audio_file)
+        audio_file.seek(0)
+        return audio_file
     except Exception as e:
-        st.error(f"Error in text-to-speech: {e}")
+        st.error(f"gTTS failed: {e}")
         return None
+
 
 # Function to generate detailed weather report text
 def generate_weather_report(weather_data, lang):
