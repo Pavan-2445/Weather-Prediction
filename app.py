@@ -542,6 +542,10 @@ def text_to_speech(text, lang):
 
 # Main App
 def main():
+    query_params = st.query_params
+    if "lang" in query_params and st.session_state.get("lang") != query_params["lang"][0]:
+        st.session_state.lang = query_params["lang"][0]
+        
     # Initialize session state for language
     if 'lang' not in st.session_state:
         st.session_state.lang = "en"
@@ -559,9 +563,6 @@ def main():
         "active" if st.session_state.lang == "te" else ""
     ), unsafe_allow_html=True)
     
-    # Handle language change using st.query_params
-    if st.query_params.get("lang"):
-        st.session_state.lang = st.query_params["lang"][0]
     
     # Get current language translations
     lang = st.session_state.lang
@@ -690,11 +691,13 @@ st.markdown("""
         comms: {
             sendMessage: function(message) {
                 if (message.type === 'setLang') {
-                    window.location.search = 'lang=' + message.lang;
+                    const queryParams = new URLSearchParams(window.location.search);
+                    queryParams.set('lang', message.lang);
+                    window.location.search = queryParams.toString();
                 }
             }
         }
-    }
+    };
 </script>
 """, unsafe_allow_html=True)
 
