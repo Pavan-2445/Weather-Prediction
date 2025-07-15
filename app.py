@@ -607,10 +607,7 @@ Wind speed is {weather["wind"]} kilometers per hour."""
                 # TTS
                 audio_file = text_to_speech(report_text, lang)
                 if audio_file:
-                    with open("temp_audio.mp3", "wb") as f:
-                        f.write(audio_file.getbuffer())
-                    autoplay_audio("temp_audio.mp3")
-
+                    autoplay_audio(audio_file)
                 # Weather Card
                 st.markdown('<div class="weather-card">', unsafe_allow_html=True)
 
