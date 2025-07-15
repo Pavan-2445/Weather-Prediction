@@ -3,3 +3,4 @@ requests
 geopy
 dotenv
 gTTS
+pyttsx3
