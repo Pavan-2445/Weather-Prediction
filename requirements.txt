@@ -3,4 +3,3 @@ requests
 geopy
 dotenv
 gTTS
-base64
