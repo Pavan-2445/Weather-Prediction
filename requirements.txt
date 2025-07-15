@@ -4,3 +4,4 @@ geopy
 dotenv
 gTTS
 pyttsx3
+base64
