@@ -514,9 +514,7 @@ def weather_emoji(condition):
         return "🌈"
 
 # Function to create audio autoplay
-def autoplay_audio(file_path: str):
-    with open(file_path, "rb") as f:
-        data = f.read()
+def autoplay_audio(audio_file):
         b64 = base64.b64encode(data).decode()
         md = f"""
             <audio autoplay>
