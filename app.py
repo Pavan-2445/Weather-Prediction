@@ -540,24 +540,8 @@ def weather_emoji(condition):
         return "🌈"
 
 # Function to create audio autoplay
-def autoplay_audio(audio_file):
-    audio_file.seek(0)
-    data = audio_file.read()
-    b64 = base64.b64encode(data).decode()
-    md = f"""
-        <audio autoplay controls">
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-        </audio>
-        <script>
-            var audio = document.querySelector("audio");
-            if (audio) {{
-                audio.play().catch(e => {{
-                    console.warn("Autoplay blocked");
-                }});
-            }}
-        </script>
-    """
-    st.markdown(md, unsafe_allow_html=True)
+def play_audio(audio_file):
+    st.audio(audio_file, format="audio/mp3")
 
 # Function to generate speech from text with fallback
 def text_to_speech(text, lang):
@@ -644,7 +628,7 @@ def main():
                 # TTS in selected language
                 audio_file = text_to_speech(report_text, lang)
                 if audio_file:
-                    autoplay_audio(audio_file)
+                    play_audio(audio_file)
                 
                 # Display weather information
                 translated_condition = cond_t.get(weather["condition"], weather["condition"])
