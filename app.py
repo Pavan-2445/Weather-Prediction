@@ -542,13 +542,22 @@ def text_to_speech(text, lang):
 
 # Main App
 def main():
-     lang_options = {
+    # Step 1: Language Selection UI (Streamlit-native)
+    lang_options = {
         "English": "en",
         "हिंदी": "hi",
         "తెలుగు": "te"
     }
 
-    lang_display = st.selectbox("🌐 Choose Language", list(lang_options.keys()), index=list(lang_options.values()).index(st.session_state.get("lang", "en")))
+    # Ensure consistent state for selected language
+    if 'lang' not in st.session_state:
+        st.session_state.lang = "en"
+
+    lang_display = st.selectbox(
+        "🌐 Choose Language",
+        list(lang_options.keys()),
+        index=list(lang_options.values()).index(st.session_state.get("lang", "en"))
+    )
     st.session_state.lang = lang_options[lang_display]
 
     # Step 2: Load translations
@@ -583,19 +592,19 @@ def main():
                 # Generate speech text
                 if lang == "en":
                     report_text = f"""Current weather in {weather["location"]}: 
-                    Temperature is {weather["temp"]:.0f} degrees Celsius, feels like {weather["feels_like"]:.0f} degrees. 
-                    {translated_condition}. Humidity is {weather["humidity"]}%.
-                    Wind speed is {weather["wind"]} kilometers per hour."""
+Temperature is {weather["temp"]:.0f} degrees Celsius, feels like {weather["feels_like"]:.0f} degrees. 
+{translated_condition}. Humidity is {weather["humidity"]}%.
+Wind speed is {weather["wind"]} kilometers per hour."""
                 elif lang == "te":
                     report_text = f"""{weather["location"]} లో ప్రస్తుత వాతావరణం: 
-                    ఉష్ణోగ్రత {weather["temp"]:.0f} డిగ్రీల సెల్సియస్, అనుభూతి {weather["feels_like"]:.0f} డిగ్రీలు. 
-                    {translated_condition}. తేమ {weather["humidity"]}%.
-                    గాలి వేగం గంటకు {weather["wind"]} కి.మీ."""
+ఉష్ణోగ్రత {weather["temp"]:.0f} డిగ్రీల సెల్సియస్, అనుభూతి {weather["feels_like"]:.0f} డిగ్రీలు. 
+{translated_condition}. తేమ {weather["humidity"]}%.
+గాలి వేగం గంటకు {weather["wind"]} కి.మీ."""
                 elif lang == "hi":
                     report_text = f"""{weather["location"]} में मौजूदा मौसम: 
-                    तापमान {weather["temp"]:.0f} डिग्री सेल्सियस है, जो {weather["feels_like"]:.0f} डिग्री जैसा लगता है।
-                    {translated_condition}. नमी {weather["humidity"]}% है।
-                    हवा की गति {weather["wind"]} किमी प्रति घंटा है।"""
+तापमान {weather["temp"]:.0f} डिग्री सेल्सियस है, जो {weather["feels_like"]:.0f} डिग्री जैसा लगता है।
+{translated_condition}. नमी {weather["humidity"]}% है।
+हवा की गति {weather["wind"]} किमी प्रति घंटा है।"""
 
                 # TTS
                 audio_file = text_to_speech(report_text, lang)
