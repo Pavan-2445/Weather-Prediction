@@ -601,8 +601,12 @@ def main():
     if 'lang' not in st.session_state:
         st.session_state.lang = "en"
 
-    lang_display = st.selectbox("\ud83c\udf10 Choose Language", list(lang_options.keys()),
-                                index=list(lang_options.values()).index(st.session_state.get("lang", "en")))
+    lang_display = st.selectbox(
+    "🌐 Choose Language",
+    list(lang_options.keys()),
+    index=list(lang_options.values()).index(st.session_state.get("lang", "en")),
+    key="language_selector"
+)
     st.session_state.lang = lang_options[lang_display]
     lang = st.session_state.lang
     t = translations[lang]
