@@ -164,6 +164,318 @@ condition_translations = {
 
 # [Previous CSS code remains exactly the same...]
 
+st.markdown("""
+<style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    
+    /* Global Styles */
+    .main {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Hide Streamlit elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Custom Background */
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-attachment: fixed;
+    }
+    
+    /* Animated Background Elements */
+    .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .cloud {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50px;
+        animation: float 25s infinite linear;
+    }
+    
+    .cloud:before {
+        content: '';
+        position: absolute;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50px;
+    }
+    
+    .cloud1 {
+        width: 80px;
+        height: 30px;
+        top: 15%;
+        left: -80px;
+    }
+    
+    .cloud1:before {
+        width: 40px;
+        height: 40px;
+        top: -20px;
+        left: 10px;
+    }
+    
+    .cloud2 {
+        width: 60px;
+        height: 25px;
+        top: 60%;
+        left: -60px;
+        animation-delay: -10s;
+    }
+    
+    .cloud2:before {
+        width: 30px;
+        height: 30px;
+        top: -15px;
+        left: 15px;
+    }
+    
+    @keyframes float {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(100vw + 100px)); }
+    }
+    
+    /* Main Title */
+    .main-title {
+        text-align: center;
+        color: white;
+        font-size: 3rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 0.5rem;
+        animation: slideDown 1s ease-out;
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        margin-bottom: 2rem;
+        animation: slideDown 1s ease-out 0.3s both;
+    }
+    
+    /* Weather Card */
+    .weather-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 25px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        margin: 1rem 0;
+        animation: fadeIn 1s ease-out;
+    }
+    
+    /* Weather Icon */
+    .weather-icon {
+        font-size: 8rem;
+        text-align: center;
+        animation: bounce 2s infinite;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin: 1rem 0;
+    }
+    
+    /* Temperature Display */
+    .temperature {
+        font-size: 4rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        text-align: center;
+        margin: 0;
+    }
+    
+    .condition {
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+    
+    /* Detail Cards */
+    .detail-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .detail-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .detail-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .detail-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .detail-value {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* Location Info */
+    .location-info {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1rem;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .location-name {
+        font-size: 1.5rem;
+        color: solid black;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* Input Styling */
+    .stTextInput > div > div > input {
+        height: 20px;
+        background: solid black;
+        border: none;
+        border-radius: 50px;
+        padding: 15px 20px;
+        font-size: 1.8rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    /* Button Styling */
+    .stButton > button {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        margin-top: -15px;
+        padding: 15px 30px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    
+    /* Language Toggle */
+    .language-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    
+    .language-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50px;
+        padding: 8px 15px;
+        margin: 0 5px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .language-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .language-btn.active {
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Animations */
+    @keyframes slideDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+    
+    /* Success/Error Messages */
+    .stSuccess {
+        background: rgba(0, 255, 0, 0.1);
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 15px;
+    }
+    
+    .stError {
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        border-radius: 15px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2rem;
+        }
+        
+        .weather-icon {
+            font-size: 5rem;
+        }
+        
+        .temperature {
+            font-size: 3rem;
+        }
+        
+        .language-toggle {
+            top: 10px;
+            right: 10px;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Add animated background
+st.markdown("""
+<div class="background-animation">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+</div>
+""", unsafe_allow_html=True)
+
 # 📍 Get coordinates from location
 def get_coordinates(location_name):
     try:
@@ -319,7 +631,7 @@ def main():
         "🌐 Choose Language",
         list(lang_options.keys()),
         index=list(lang_options.values()).index(st.session_state.get("lang", "en"))
-    st.session_state.lang = lang_options[lang_display]
+    st.session_state.lang = lang_options[lang_display])
 
     # Step 2: Load translations
     lang = st.session_state.lang
