@@ -597,30 +597,41 @@ def generate_weather_report(weather_data, lang):
 # Main App
 def main():
     # Step 1: Language Selection UI (Streamlit-native)
-    lang_options = {"English": "en", "\u0939\u093f\u0902\u0926\u0940": "hi", "\u0c24\u0c46\u0c32\u0c41\u0c17\u0c41": "te"}
+    lang_options = {
+        "English": "en",
+        "हिंदी": "hi",
+        "తెలుగు": "te"
+    }
+
+    # Ensure consistent state for selected language
     if 'lang' not in st.session_state:
         st.session_state.lang = "en"
 
     lang_display = st.selectbox(
-    "🌐 Choose Language",
-    list(lang_options.keys()),
-    index=list(lang_options.values()).index(st.session_state.get("lang", "en")),
-    key="language_selector"
-)
+        "🌐 Choose Language",
+        list(lang_options.keys()),
+        index=list(lang_options.values()).index(st.session_state.get("lang", "en")))
     st.session_state.lang = lang_options[lang_display]
+
+    # Step 2: Load translations
     lang = st.session_state.lang
     t = translations[lang]
     cond_t = condition_translations[lang]
 
+    # Header
     st.markdown(f'<h1 class="main-title">{t["title"]}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
 
+    # Search Section
     col1, col2 = st.columns([3, 1])
+
     with col1:
-        location = st.text_input("\ud83d\udccd", "523001", label_visibility="collapsed", placeholder=t["input_placeholder"])
+        location = st.text_input("📍", "523001", label_visibility="collapsed", placeholder=t["input_placeholder"])
+
     with col2:
         search_button = st.button(t["button_text"], key="search")
 
+    # Weather Display
     if search_button or location:
         if location:
             with st.spinner(t["loading"]):
@@ -629,11 +640,74 @@ def main():
             if error:
                 st.error(error)
             elif weather:
+                # Generate detailed weather report text
                 report_text = generate_weather_report(weather, lang)
+                
+                # TTS in selected language
                 audio_file = text_to_speech(report_text, lang)
                 if audio_file:
                     autoplay_audio(audio_file)
-                # Display weather visually like before (you can paste your existing UI here)
+                
+                # Display weather information
+                translated_condition = cond_t.get(weather["condition"], weather["condition"])
+                
+                # Weather Card
+                st.markdown('<div class="weather-card">', unsafe_allow_html=True)
+
+                col1, col2 = st.columns([1, 2])
+                with col1:
+                    st.markdown(f'<div class="weather-icon">{weather["emoji"]}</div>', unsafe_allow_html=True)
+                with col2:
+                    st.markdown(f'<div class="temperature">{weather["temp"]:.0f}°C</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div class="condition">{translated_condition}</div>', unsafe_allow_html=True)
+
+                st.markdown("---")
+
+                col1, col2, col3, col4 = st.columns(4)
+
+                with col1:
+                    st.markdown(f'''
+                    <div class="detail-card">
+                        <div class="detail-icon">💧</div>
+                        <div class="detail-label">{t["labels"]["humidity"]}</div>
+                        <div class="detail-value">{weather["humidity"]}%</div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+
+                with col2:
+                    st.markdown(f'''
+                    <div class="detail-card">
+                        <div class="detail-icon">💨</div>
+                        <div class="detail-label">{t["labels"]["wind"]}</div>
+                        <div class="detail-value">{weather["wind"]} km/h</div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+
+                with col3:
+                    st.markdown(f'''
+                    <div class="detail-card">
+                        <div class="detail-icon">🌿</div>
+                        <div class="detail-label">{t["labels"]["air_quality"]}</div>
+                        <div class="detail-value">{weather["aqi"] if weather["aqi"] != "N/A" else "N/A"}</div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+
+                with col4:
+                    st.markdown(f'''
+                    <div class="detail-card">
+                        <div class="detail-icon">🌡️</div>
+                        <div class="detail-label">{t["labels"]["feels_like"]}</div>
+                        <div class="detail-value">{weather["feels_like"]:.0f}°C</div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+
+                st.markdown(f'''
+                <div class="location-info">
+                    <div class="location-name">📍 {weather["location"]}</div>
+                </div>
+                ''', unsafe_allow_html=True)
+
+                st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info(t["enter_location"])
 if __name__ == "__main__":
