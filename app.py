@@ -545,15 +545,14 @@ def autoplay_audio(audio_file):
     data = audio_file.read()
     b64 = base64.b64encode(data).decode()
     md = f"""
-        <audio autoplay controls style="display:none">
+        <audio autoplay controls">
             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
         </audio>
         <script>
             var audio = document.querySelector("audio");
             if (audio) {{
                 audio.play().catch(e => {{
-                    console.log("Autoplay blocked");
-                    audio.style.display = 'block';
+                    console.warn("Autoplay blocked");
                 }});
             }}
         </script>
