@@ -630,7 +630,7 @@ def main():
     lang_display = st.selectbox(
         "🌐 Choose Language",
         list(lang_options.keys()),
-        index=list(lang_options.values()).index(st.session_state.get("lang", "en"))
+        index=list(lang_options.values()).index(st.session_state.get("lang", "en")))
     st.session_state.lang = lang_options[lang_display]
 
     # Step 2: Load translations
